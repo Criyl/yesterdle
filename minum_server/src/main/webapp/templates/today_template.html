@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Todaydle</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="filename" content="word_template.html" />
+        <style>
+            body {
+                position: relative;
+                height: 100vh;
+                margin: 0;
+                background-color: #121213;
+            }
+
+            h1 {
+                font-family:  "Helvetica Neue", sans-serif;
+                /* color: rgb(141, 135, 78); */
+                color: #f5793a;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 100%;
+                text-align: center;
+                margin: 0;
+            }
+
+            h1 word {
+                font-family:  "Helvetica Neue", "Helvetica Neue Bolder", sans-serif;
+                color:  #ffffff;
+                font-style: Bolder;
+                font-size: larger;
+            }
+
+            footer {
+                font-family:  "Helvetica Neue", "Helvetica Neue Bolder", sans-serif;
+                color: rgb(124, 124, 124);
+                font-style: Bolder;
+                font-size: x-large;
+                
+                width:100%;
+                text-align: center;
+                position: fixed;
+                bottom: 0.5%;
+            }
+            header {
+                font-family:  "Helvetica Neue", "Helvetica Neue Bolder", sans-serif;
+                color: rgb(124, 124, 124);
+                font-style: Bolder;
+                font-size: x-large;
+                width:100%;
+                text-align: center;
+                position: fixed;
+                top: 0.5%;
+                height: 50%;
+            }
+
+            header a {
+                padding-left: 10%;
+                padding-right: 10%;
+            }
+
+            a:link { 
+                text-decoration: none; 
+                color:rgb(226, 226, 226);
+                opacity: 0.8;
+            } 
+            a:visited { 
+                text-decoration: none; 
+                color:rgb(226, 226, 226);
+                opacity: 0.8;
+            } 
+            a:hover { 
+                text-decoration: none;
+                opacity:1;
+                font-size: xx-large;
+            } 
+        </style>
+    </head>
+    <body>
+        <header>
+            <a href="/yesterday" style="color: #85c0f9;">
+                yesterdle
+            </a>
+            <a href="/today" style="color: #f5793a;">
+                todaydle
+            </a> 
+        </header>
+        <h1>
+            <p>Today's Wordle</p>
+            <word>{{word}}</word>
+            <p>Date: {{date}}</p>
+        </h1> 
+        <footer> 
+            <a href="https://github.com/byronka/minum">
+                minum made
+            </a>
+        </footer>
+    </body>
+</html>
