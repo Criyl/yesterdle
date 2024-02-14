@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: yesterdle-server
+  name: yesterdle-service
+spec:
+  ports:
+  - name: yesterdle-server
+    nodePort: {{ .Values.hostPort }}
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: yesterdle-server
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: yesterdle-server
+  name: yesterdle-server
+spec:
+  serviceName: "yesterdle-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yesterdle-server
+  template:
+    metadata:
+      labels:
+        app: yesterdle-server
+    spec:
+      containers:
+        - image: criyl/yesterdle:latest
+          name: yesterdle-server
+          tty: true
+          volumeMounts:
+            - mountPath: "/opt/project/out"
+              name: server-data
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+          ports:
+            - containerPort: 8080
+      volumes:
+        - name: server-data
+          hostPath:
+            path: /mnt/k3s/yesterdle

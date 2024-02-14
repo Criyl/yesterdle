@@ -4,6 +4,7 @@ import com.renomad.minum.web.RequestLine;
 import com.renomad.minum.Context;
 import com.renomad.minum.database.Db;
 import com.renomad.minum.templating.TemplateProcessor;
+import com.renomad.minum.web.FullSystem;
 import com.renomad.minum.web.Request;
 import com.renomad.minum.web.Response;
 import com.renomad.minum.web.WebFramework;
@@ -22,15 +23,23 @@ public class Registry {
     private final TemplateProcessor todayTemplateProcessor;
 
     public Registry(Context context) {
-        String template_text = context
+        String base_template = context
                 .getFileUtils()
-                .readTextFile("src/main/webapp/templates/yesterday_template.html");
-        this.yesterdayTemplateProcessor = TemplateProcessor.buildProcessor(template_text);
+                .readTextFile("src/main/webapp/templates/base.html");
+        String today_template = context
+                .getFileUtils()
+                .readTextFile("src/main/webapp/templates/today.html");
+        String yesterday_template = context
+                .getFileUtils()
+                .readTextFile("src/main/webapp/templates/yesterday.html");
 
-        template_text = context
-                .getFileUtils()
-                .readTextFile("src/main/webapp/templates/today_template.html");
-        this.todayTemplateProcessor = TemplateProcessor.buildProcessor(template_text);
+        TemplateProcessor baseTemplateProcessor = TemplateProcessor.buildProcessor(base_template);
+
+        this.todayTemplateProcessor = TemplateProcessor.buildProcessor(
+                baseTemplateProcessor.renderTemplate(Map.of("which", "Todaydle", "content", today_template)));
+
+        this.yesterdayTemplateProcessor = TemplateProcessor.buildProcessor(
+                baseTemplateProcessor.renderTemplate(Map.of("which", "Yesterdle", "content", yesterday_template)));
 
         this.context = context;
         this.webFramework = context.getFullSystem().getWebFramework();
@@ -94,5 +103,4 @@ public class Registry {
                 "date", formattedString);
         return Response.htmlOk(yesterdayTemplateProcessor.renderTemplate(templateValues));
     }
-
 }

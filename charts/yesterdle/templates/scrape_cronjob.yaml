@@ -1,0 +1,67 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: yesterdle-scraper-cronjob
+spec:
+  schedule: {{ .Values.schedule | quote }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 3
+      activeDeadlineSeconds: 300
+      template:
+        spec: 
+          restartPolicy: OnFailure
+          volumes:
+            - name: server-data
+              hostPath:
+                path: /mnt/k3s/yesterdle
+            - name: dshm
+              emptyDir:
+                medium: Memory
+          containers:
+            - name: selenium
+              image: selenium/standalone-chrome:4.17
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_ADMIN
+              resources:
+                limits:
+                  cpu: '4'
+                  memory: 3000Mi
+                requests:
+                  cpu: '2'
+                  memory: 1000Mi
+              env:
+                - name: SE_VNC_NO_PASSWORD
+                  value: "1"
+                - name: SE_NODE_MAX_CONCURRENT_SESSIONS
+                  value: "3"
+                - name: SE_OPTS
+                  value: "--session-timeout 120"
+                - name: RID_MAX_SESSION
+                  value: "2"
+              ports:
+                - containerPort: 4444
+              volumeMounts:
+              - mountPath: /dev/shm
+                name: dshm
+            - name: yesterdle-scraper
+              image: criyl/yesterdle:latest
+              command:
+                - bash
+                - -c
+              args:
+                - sleep 10;java -cp target/minum_server-1.0.0-jar-with-dependencies.jar codes.carroll.scrape.Main
+              volumeMounts:
+                - mountPath: "/opt/project/out"
+                  name: server-data
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_ADMIN
+              env:
+                - name: SELENIUM_URI
+                  value: http://localhost:4444/wd/hub
+                
