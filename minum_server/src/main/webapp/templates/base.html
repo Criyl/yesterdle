@@ -7,7 +7,9 @@
         <meta name="filename" content="word_template.html" />
         <link rel="stylesheet" href="style.css" />
     </head>
-    <body id="yesterdle">
+    <body>
+        <backdrop id="backdrop">
+        </backdrop>
         <header>
             <a id="yesterdle" href="/yesterday" >
                 yesterdle
@@ -16,7 +18,9 @@
                 todaydle
             </a> 
         </header>
-        {{ content }}
+        <h1>
+            {{ content }}
+        </h1>
         <footer> 
             <a href="https://github.com/byronka/minum">
                 minum made

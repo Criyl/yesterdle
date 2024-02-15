@@ -1,4 +1,5 @@
 body {
+    font-family:  "Helvetica Neue", "Helvetica Neue Bolder", sans-serif;
     position: relative;
     height: 100vh;
     margin: 0;
@@ -6,7 +7,6 @@ body {
 }
 
 h1 {
-    font-family:  "Helvetica Neue", sans-serif;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -15,41 +15,6 @@ h1 {
     margin: 0;
 }
 
-h1 word {
-    font-family:  "Helvetica Neue", "Helvetica Neue Bolder", sans-serif;
-    color: #ffffff;
-    font-style: Bolder;
-    font-size: larger;
-}
-
-footer {
-    font-family:  "Helvetica Neue", "Helvetica Neue Bolder", sans-serif;
-    color: rgb(124, 124, 124);
-    font-style: Bolder;
-    font-size: x-large;
-    
-    width:100%;
-    text-align: center;
-    position: fixed;
-    bottom: 0.5%;
-}
-
-header {
-    font-family:  "Helvetica Neue", "Helvetica Neue Bolder", sans-serif;
-    color: rgb(124, 124, 124);
-    font-style: Bolder;
-    font-size: x-large;
-    width:100%;
-    text-align: center;
-    position: fixed;
-    top: 0.5%;
-    height: 50%;
-}
-
-header a {
-    padding-left: 10%;
-    padding-right: 10%;
-}
 
 #yesterdle {
     color: #85c0f9;
@@ -59,20 +24,85 @@ header a {
     color: #f5793a;
 }
 
+h1#yesterdle word {
+    color: #ffffff;
+    text-shadow:0 0 10px #85c0f9;
+    font-style: Bolder;
+    font-size: larger;
+}
+
+h1#todaydle word {
+    color: #ffffff;
+    text-shadow:0 0 10px #f5793a;
+    font-style: Bolder;
+    font-size: larger;
+}
+
+backdrop {
+    font-family:  "Helvetica Neue", "Helvetica Neue Bolder", sans-serif;
+    position: absolute;
+    left: 0;
+    top:0;
+    height: 100%;
+    width: 100%;
+    background-image: url(backdrop.jpg);
+    background-repeat:repeat;
+    z-index: -1;
+    opacity: .01;
+}
+
+footer {
+    color: rgb(124, 124, 124);
+    font-style: Bolder;
+    font-size: x-large;
+    width:100%;
+    text-align: center;
+    position: fixed;
+    bottom: 20px;
+}
+
+#badge {
+    text-align: right;
+    position: fixed;
+    bottom: 0.5%;
+    right: 3%;
+}
+
+header {
+    font-family:  "Helvetica Neue", "Helvetica Neue Bolder", sans-serif;
+    font-style: Bolder;
+    font-size: x-large;
+
+    color: rgb(124, 124, 124);
+    width:100%;
+    text-align: center;
+    position: fixed;
+    top: 10px;
+    height: 50%;
+}
+
+header a {
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
 a:link { 
     text-decoration: none; 
     color:rgb(226, 226, 226);
-    opacity: 0.8;
 } 
 
 a:visited { 
     text-decoration: none; 
     color:rgb(226, 226, 226);
-    opacity: 0.8;
 } 
 
-a:hover { 
-    text-decoration: none;
-    opacity:1;
-    font-size: xx-large;
-} 
+a {
+    transition: all 0.4s ease 0s;
+}
+
+a:hover {
+    letter-spacing: 5px;
+    color:#83e07b !important;
+    text-shadow:0 0 25px #83e07b !important;
+    transition: all 0.4s ease 0s;
+}
