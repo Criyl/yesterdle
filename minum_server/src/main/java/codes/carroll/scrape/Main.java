@@ -8,7 +8,6 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -16,9 +15,7 @@ import codes.carroll.WordModel;
 
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.net.URI;
 import java.net.URL;
-import java.util.Optional;
 import java.util.List;
 import java.lang.Thread;
 import java.time.Duration;

@@ -4,7 +4,6 @@ import com.renomad.minum.web.RequestLine;
 import com.renomad.minum.Context;
 import com.renomad.minum.database.Db;
 import com.renomad.minum.templating.TemplateProcessor;
-import com.renomad.minum.web.FullSystem;
 import com.renomad.minum.web.Request;
 import com.renomad.minum.web.Response;
 import com.renomad.minum.web.WebFramework;
@@ -68,12 +67,11 @@ public class Registry {
             Db<WordModel> words = context.getDb("words", WordModel.EMPTY);
             word = Optional.of(words.values().stream().toList().getLast());
         } catch (Exception e) {
-            // word = "Come Back Tomorrow";
         }
 
         String wordText = word.get().word;
         ZonedDateTime wordDateTime = word.get().timestamp;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy z");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         String formattedString = wordDateTime.format(formatter);
 
         Map<String, String> templateValues = Map.of(
@@ -90,12 +88,11 @@ public class Registry {
             List<WordModel> wordList = words.values().stream().toList();
             word = Optional.of(wordList.get(wordList.size() - 2));
         } catch (Exception e) {
-            // word = "Come Back Tomorrow";
         }
 
         String wordText = word.get().word;
         ZonedDateTime wordDateTime = word.get().timestamp;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy z");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         String formattedString = wordDateTime.format(formatter);
 
         Map<String, String> templateValues = Map.of(
