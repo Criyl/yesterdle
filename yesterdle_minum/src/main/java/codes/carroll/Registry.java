@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Registry {
 
@@ -63,17 +64,26 @@ public class Registry {
 
         public Response history(Request r) {
                 Db<WordModel> words = context.getDb("words", WordModel.EMPTY);
+
+                if (words.values().size() == 0) {
+                        return Response.htmlOk(historyTemplateProcessor.renderTemplate(Map.of(
+                                        "wordlist", "")));
+                }
+
                 String worldListHtml = "";
 
-                for (WordModel word : words.values()
+                Stream<String> wordList = words.values()
                                 .stream()
-                                .toList()
-                                .subList(0, words.values().size() - 1)
-                                .reversed()) {
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E MM/dd/yyyy");
-                        String formattedString = word.timestamp.format(formatter);
-                        worldListHtml += "<li> <a id='word'>" + word.word + "</a></br><a id='date'>" + formattedString
-                                        + "</a></li>";
+                                .map(word -> {
+                                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E MM/dd/yyyy");
+                                        String formattedString = word.timestamp.format(formatter);
+                                        return "<li> <a id='word'>" + word.word + "</a></br><a id='date'>"
+                                                        + formattedString
+                                                        + "</a></li>";
+                                });
+
+                for (String word : wordList.toList()) {
+                        worldListHtml += word;
                 }
 
                 Map<String, String> templateValues = Map.of(
@@ -82,16 +92,16 @@ public class Registry {
         }
 
         public Response today(Request r) {
-                Optional<WordModel> word = Optional.empty();
+                String wordText = "No Data";
+                ZonedDateTime wordDateTime = ZonedDateTime.now();
 
                 try {
                         Db<WordModel> words = context.getDb("words", WordModel.EMPTY);
-                        word = Optional.of(words.values().stream().toList().getLast());
+                        WordModel wordModel = words.values().stream().toList().getLast();
+                        wordText = wordModel.word;
+                        wordDateTime = wordModel.timestamp;
                 } catch (Exception e) {
                 }
-
-                String wordText = word.get().word;
-                ZonedDateTime wordDateTime = word.get().timestamp;
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
                 String formattedString = wordDateTime.format(formatter);
 
@@ -102,17 +112,19 @@ public class Registry {
         }
 
         public Response yesterday(Request r) {
-                Optional<WordModel> word = Optional.empty();
+                String wordText = "No Data";
+                ZonedDateTime wordDateTime = ZonedDateTime.now();
 
                 try {
                         Db<WordModel> words = context.getDb("words", WordModel.EMPTY);
                         List<WordModel> wordList = words.values().stream().toList();
-                        word = Optional.of(wordList.get(wordList.size() - 2));
+                        WordModel wordModel = wordList.get(wordList.size() - 2);
+                        wordText = wordModel.word;
+                        wordDateTime = wordModel.timestamp;
                 } catch (Exception e) {
+
                 }
 
-                String wordText = word.get().word;
-                ZonedDateTime wordDateTime = word.get().timestamp;
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
                 String formattedString = wordDateTime.format(formatter);
 

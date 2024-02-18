@@ -37,6 +37,7 @@ services:
       - type: bind
         source: mnt/
         target: /opt/project/out
+
   selenium:
     image: selenium/standalone-chrome
     shm_size: 2g
