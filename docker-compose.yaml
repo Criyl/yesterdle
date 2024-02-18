@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   webapp:
-    build: ./minum_server
+    build: ./yesterdle_minum
     command:
       [
         "java",
@@ -18,7 +18,7 @@ services:
         target: /opt/project/out
 
   scrape:
-    build: ./minum_server
+    build: ./yesterdle_minum
     command:
       [
         "java",
