@@ -1,5 +1,7 @@
 # Yesterdle
 
+![Screenshot](docs/yesterdle_screenshot.png)
+
 ### The Problem
 
 I wanted a reliable, ad free, and concise place to see the previous days [Wordle](https://www.nytimes.com/games/wordle/index.html) answer. So I decided to create a site that does just that.
