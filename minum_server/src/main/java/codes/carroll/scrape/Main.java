@@ -42,29 +42,34 @@ public class Main {
         Thread.sleep(3000);
     }
 
-    private static void add(String word) {
-        FullSystem fs = FullSystem.initialize();
-        Db<WordModel> words = fs.getContext().getDb("words", WordModel.EMPTY);
+    private static void add(Db<WordModel> db, String word) {
+        if (word.length() != 5) {
+            return;
+        }
 
-        for (WordModel model : words.values()) {
+        for (WordModel model : db.values()) {
             if (model.word.matches(word)) {
                 return;
             }
         }
 
         WordModel wordModel = new WordModel(0, word);
-        words.write(wordModel);
+        db.write(wordModel);
     }
 
     private static String solve(WebDriver driver) throws InterruptedException {
+        return solve(driver, "scram");
+    }
+
+    private static String solve(WebDriver driver, String testWord) throws InterruptedException {
         start(driver);
         Thread.sleep(3000);
-        enterGuess(driver, "scram");
-        enterGuess(driver, "scram");
-        enterGuess(driver, "scram");
-        enterGuess(driver, "scram");
-        enterGuess(driver, "scram");
-        enterGuess(driver, "scram");
+        enterGuess(driver, testWord);
+        enterGuess(driver, testWord);
+        enterGuess(driver, testWord);
+        enterGuess(driver, testWord);
+        enterGuess(driver, testWord);
+        enterGuess(driver, testWord);
 
         Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(2));
         wait.until(d -> driver.findElement(By.xpath("//div[@aria-live='polite']")).isEnabled());
@@ -73,6 +78,9 @@ public class Main {
     }
 
     public static void main(String[] args) throws Exception {
+        FullSystem fs = FullSystem.initialize();
+        Db<WordModel> wordDB = fs.getContext().getDb("words", WordModel.EMPTY);
+
         ChromeOptions options = new ChromeOptions();
         options.addArguments(List.of(
                 "--ignore-ssl-errors=yes",
@@ -80,10 +88,14 @@ public class Main {
         String seleniumUri = System.getenv("SELENIUM_URI");
         WebDriver driver = new RemoteWebDriver(new URL(seleniumUri), options);
 
-        driver.get("https://www.nytimes.com/games/wordle");
+        String oldWord = wordDB.values()
+                .stream()
+                .toList()
+                .get(wordDB.values().size() - 3).word;
 
-        String result = solve(driver);
-        add(result);
+        driver.get("https://www.nytimes.com/games/wordle");
+        String result = solve(driver, oldWord);
+        add(wordDB, result);
         System.out.println(result);
         driver.quit();
     }
