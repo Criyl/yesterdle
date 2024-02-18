@@ -82,7 +82,7 @@ public class Registry {
                                                         + "</a></li>";
                                 });
 
-                for (String word : wordList.toList()) {
+                for (String word : wordList.toList().reversed()) {
                         worldListHtml += word;
                 }
 
