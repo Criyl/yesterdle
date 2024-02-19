@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 import java.util.List;
+import java.util.Collection;
 import java.util.stream.Stream;
 
 public class Registry {
@@ -64,27 +65,24 @@ public class Registry {
 
         public Response history(Request r) {
                 Db<WordModel> words = context.getDb("words", WordModel.EMPTY);
+                Collection<WordModel> wordModelStream = words.values();
 
-                if (words.values().size() == 0) {
+                if (wordModelStream.size() == 0) {
                         return Response.htmlOk(historyTemplateProcessor.renderTemplate(Map.of(
                                         "wordlist", "")));
                 }
 
-                String worldListHtml = "";
-
-                Stream<String> wordList = words.values()
-                                .stream()
+                String worldListHtml = wordModelStream.stream()
+                                .sorted((x, y) -> y.timestamp.compareTo(x.timestamp))
+                                .skip(1)
                                 .map(word -> {
                                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E MM/dd/yyyy");
                                         String formattedString = word.timestamp.format(formatter);
                                         return "<li> <a id='word'>" + word.word + "</a></br><a id='date'>"
                                                         + formattedString
                                                         + "</a></li>";
-                                });
-
-                for (String word : wordList.toList().reversed()) {
-                        worldListHtml += word;
-                }
+                                })
+                                .reduce("", (subtotal, element) -> subtotal + element);
 
                 Map<String, String> templateValues = Map.of(
                                 "wordlist", worldListHtml);
