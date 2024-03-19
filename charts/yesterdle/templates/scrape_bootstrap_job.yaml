@@ -1,7 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: yesterdle-scraper-bootstrap
+  name: yesterdle-scraper-post-sync
+  annotations:
+    argocd.argoproj.io/hook: PostSync
 spec:
   template:
     spec: 
