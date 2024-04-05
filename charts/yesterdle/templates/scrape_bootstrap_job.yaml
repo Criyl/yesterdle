@@ -25,10 +25,10 @@ spec:
               resources:
                 limits:
                   cpu: '4'
-                  memory: 3000Mi
+                  memory: 3072Mi
                 requests:
                   cpu: '2'
-                  memory: 1000Mi
+                  memory: 1024Mi
               env:
                 - name: SE_VNC_NO_PASSWORD
                   value: "1"
@@ -53,6 +53,13 @@ spec:
               volumeMounts:
                 - mountPath: "/opt/project/out"
                   name: server-data
+              resources:
+                limits:
+                  cpu: '4'
+                  memory: 2048Mi
+                requests:
+                  cpu: '2'
+                  memory: 1024Mi
               securityContext:
                 capabilities:
                   add:

@@ -35,7 +35,6 @@ spec:
       containers:
         - image: criyl/yesterdle:latest
           name: yesterdle-server
-          tty: true
           volumeMounts:
             - mountPath: "/opt/project/out"
               name: server-data
@@ -45,6 +44,13 @@ spec:
                 - NET_ADMIN
           ports:
             - containerPort: 8080
+          resources:
+            limits:
+              cpu: '4'
+              memory: 2048Mi
+            requests:
+              cpu: '2'
+              memory: 1024Mi
       volumes:
         - name: server-data
           hostPath:
