@@ -6,7 +6,7 @@ metadata:
     argocd.argoproj.io/hook: PostSync
 spec:
   backoffLimit: 3
-  activeDeadlineSeconds: 600
+  activeDeadlineSeconds: 150
   template:
     spec: 
       restartPolicy: OnFailure
