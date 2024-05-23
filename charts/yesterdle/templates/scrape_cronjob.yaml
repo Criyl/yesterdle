@@ -11,64 +11,36 @@ spec:
       activeDeadlineSeconds: 150
       template:
         spec: 
-          restartPolicy: OnFailure
+          restartPolicy: Never
           volumes:
-            - name: server-data
-              hostPath:
-                path: /mnt/k3s/yesterdle
-            - name: dshm
-              emptyDir:
-                medium: Memory
+          - name: server-data
+            persistentVolumeClaim:
+            {{- if .Values.server.persistence.existingClaim }}
+              claimName: {{ tpl .Values.server.persistence.existingClaim . }}
+            {{- else }}
+              claimName: pvc-yesterdle
+            {{- end }}
           containers:
-            - name: selenium
-              image: selenium/standalone-chrome:4.17
-              securityContext:
-                capabilities:
-                  add:
-                    - NET_ADMIN
-              resources:
-                limits:
-                  cpu: '4'
-                  memory: 3072Mi
-                requests:
-                  cpu: '2'
-                  memory: 1028Mi
-              env:
-                - name: SE_VNC_NO_PASSWORD
-                  value: "1"
-                - name: SE_NODE_MAX_CONCURRENT_SESSIONS
-                  value: "3"
-                - name: SE_OPTS
-                  value: "--session-timeout 120"
-                - name: RID_MAX_SESSION
-                  value: "2"
-              ports:
-                - containerPort: 4444
-              volumeMounts:
-              - mountPath: /dev/shm
-                name: dshm
-            - name: yesterdle-scraper
-              image: criyl/yesterdle:latest
-              command:
-                - bash
-                - -c
-              args:
-                - sleep 10;java -Xms512m -Xmx2048m -cp target/minum_server-1.0.0-jar-with-dependencies.jar codes.carroll.scrape.Main
-              volumeMounts:
-                - mountPath: "/opt/project/out"
-                  name: server-data
-              resources:
-                limits:
-                  cpu: '4'
-                  memory: 2048Mi
-                requests:
-                  cpu: '2'
-                  memory: 1024Mi
-              securityContext:
-                capabilities:
-                  add:
-                    - NET_ADMIN
-              env:
-                - name: SELENIUM_URI
-                  value: http://localhost:4444/wd/hub
-                
+          - name: yesterdle-scraper
+            image: {{ .Values.server.image }}
+            command:
+              - bash
+              - -c
+            args:
+              - java -cp target/minum_server-1.0.0-jar-with-dependencies.jar codes.carroll.scrape.Main
+            volumeMounts:
+              - mountPath: "/opt/project/out"
+                name: server-data
+            {{- if .Values.server.resources}}
+            resources: {{ toYaml .Values.server.resources | nindent 14 }}
+            {{- end }}
+            securityContext:
+              capabilities:
+                add:
+                  - NET_ADMIN
+            startupProbe:
+              httpGet:
+                path: /status
+                port: 4444
+              failureThreshold: 30
+              periodSeconds: 10

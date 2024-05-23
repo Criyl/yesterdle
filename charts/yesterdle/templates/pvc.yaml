@@ -1,0 +1,16 @@
+{{- if not .Values.server.persistence.existingClaim}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-yesterdle
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.server.persistence.size }}
+  storageClassName: {{ .Values.server.persistence.storageClassName }}
+  {{- if .Values.server.persistence.volumeName }}
+  volumeName: {{ .Values.server.persistence.volumeName }}
+  {{- end }}
+{{- end }}

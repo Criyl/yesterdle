@@ -7,13 +7,17 @@ metadata:
 spec:
   ports:
   - name: yesterdle-server
-    nodePort: {{ .Values.hostPort }}
-    port: 8080
+    port: {{ .Values.server.service.port }}
     protocol: TCP
     targetPort: 8080
+    {{- if .Values.server.service.nodePort}}
+    nodePort: {{ toYaml .Values.server.service.nodePort | nindent 12 }}
+    {{- end }}
+    clusterIP: {{ .Values.server.service.clusterIP }}
+    loadBalancerIP: {{ .Values.server.service.loadBalancerIP }}
   selector:
     app: yesterdle-server
-  type: NodePort
+  type: {{ .Values.server.service.type }}
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -23,7 +27,7 @@ metadata:
   name: yesterdle-server
 spec:
   serviceName: "yesterdle-service"
-  replicas: 1
+  replicas: {{ .Values.server.replicas }}
   selector:
     matchLabels:
       app: yesterdle-server
@@ -33,7 +37,7 @@ spec:
         app: yesterdle-server
     spec:
       containers:
-        - image: criyl/yesterdle:latest
+        - image: {{ .Values.server.image }}
           name: yesterdle-server
           volumeMounts:
             - mountPath: "/opt/project/out"
@@ -44,14 +48,14 @@ spec:
                 - NET_ADMIN
           ports:
             - containerPort: 8080
-          resources:
-            limits:
-              cpu: '4'
-              memory: 2048Mi
-            requests:
-              cpu: '2'
-              memory: 1024Mi
+          {{- if .Values.server.resources}}
+          resources: {{ toYaml .Values.server.resources | nindent 12 }}
+          {{- end }}
       volumes:
         - name: server-data
-          hostPath:
-            path: /mnt/k3s/yesterdle
+          persistentVolumeClaim:
+          {{- if .Values.server.persistence.existingClaim }}
+            claimName: {{ tpl .Values.server.persistence.existingClaim . }}
+          {{- else }}
+            claimName: pvc-yesterdle
+          {{- end }}

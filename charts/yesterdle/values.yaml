@@ -1,2 +1,19 @@
-hostPort: "31809"
 schedule: "30 0 * * *"
+server:
+  image: criyl/yesterdle:latest
+  replicas: 1
+  persistence:
+    existingClaim: ""
+    volumeName: ""
+    storageClass: ""
+    size: 10Gi
+  service:
+    type: ClusterIP
+    port: 80
+    nodePort: {}
+    clusterIP: ""
+    loadBalancerIP: ""
+  resources: {}
+selenium:
+  image: selenium/standalone-chrome:4.17
+  resources: {}
