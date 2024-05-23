@@ -5,9 +5,11 @@ metadata:
   annotations:
     argocd.argoproj.io/hook: PostSync
 spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 150
   template:
     spec: 
-      restartPolicy: Always
+      restartPolicy: Never
       volumes:
         - name: server-data
           hostPath:
@@ -40,14 +42,8 @@ spec:
                   value: "2"
               ports:
                 - containerPort: 4444
+              restartPolicy: Always
               livenessProbe:
-                httpGet:
-                  path: /status
-                  port: 4444
-                failureThreshold: 1
-                periodSeconds: 60
-                terminationGracePeriodSeconds: 60
-              readinessProbe:
                 httpGet:
                   path: /status
                   port: 4444
