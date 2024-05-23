@@ -50,14 +50,14 @@ spec:
                 httpGet:
                   path: /no
                   port: 4444
-                failureThreshold: 30
-                periodSeconds: 10
+                failureThreshold: 5
+                periodSeconds: 5
               readinessProbe:
                 httpGet:
-                  path: /no
+                  path: /status
                   port: 4444
-                failureThreshold: 30
-                periodSeconds: 10
+                failureThreshold: 5
+                periodSeconds: 5
               volumeMounts:
               - mountPath: /dev/shm
                 name: dshm
