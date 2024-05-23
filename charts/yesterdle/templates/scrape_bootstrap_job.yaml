@@ -40,7 +40,6 @@ spec:
                   value: "2"
               ports:
                 - containerPort: 4444
-              restartPolicy: Always
               startupProbe:
                 httpGet:
                   path: /healthz
