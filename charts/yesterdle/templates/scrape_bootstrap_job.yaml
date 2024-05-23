@@ -42,8 +42,8 @@ spec:
                 - containerPort: 4444
               startupProbe:
                 httpGet:
-                  path: /healthz
-                  port: liveness-port
+                  path: /status
+                  port: 4444
                 failureThreshold: 30
                 periodSeconds: 10
               volumeMounts:
