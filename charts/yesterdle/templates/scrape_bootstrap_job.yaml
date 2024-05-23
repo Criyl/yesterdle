@@ -9,6 +9,7 @@ spec:
   activeDeadlineSeconds: 150
   template:
     spec: 
+      restartPolicy: Always
       volumes:
         - name: server-data
           hostPath:
