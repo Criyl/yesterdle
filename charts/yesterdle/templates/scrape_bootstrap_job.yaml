@@ -15,7 +15,7 @@ spec:
         - name: dshm
           emptyDir:
             medium: Memory
-      initContainers:
+      containers:
             - name: selenium
               image: selenium/standalone-chrome:4.17
               securityContext:
@@ -50,7 +50,6 @@ spec:
               volumeMounts:
               - mountPath: /dev/shm
                 name: dshm
-      containers:
             - name: yesterdle-scraper
               image: criyl/yesterdle:latest
               command:
