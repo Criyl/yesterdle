@@ -7,7 +7,7 @@ metadata:
 spec:
   template:
     spec: 
-      restartPolicy: Never
+      restartPolicy: Always
       volumes:
         - name: server-data
           hostPath:
