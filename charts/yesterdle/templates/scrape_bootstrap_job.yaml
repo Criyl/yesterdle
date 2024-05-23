@@ -48,13 +48,13 @@ spec:
                 periodSeconds: 10
               livenessProbe:
                 httpGet:
-                  path: /status
+                  path: /no
                   port: 4444
                 failureThreshold: 30
                 periodSeconds: 10
               readinessProbe:
                 httpGet:
-                  path: /status
+                  path: /no
                   port: 4444
                 failureThreshold: 30
                 periodSeconds: 10
