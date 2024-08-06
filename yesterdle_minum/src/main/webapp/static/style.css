@@ -50,7 +50,7 @@ h1#histordle > ul > li > #date {
   font-size: large;
 }
 
-#yesterdle {
+#yesterdle, #wordleword{
   color: #85c0f9;
 }
 
@@ -76,8 +76,7 @@ masker {
   position: fixed;
   left: 0;
   top: 0;
-  height: 100%;
-  width: 100%;
+
 
   /* -webkit-mask-image: linear-gradient(to bottom, black .1%, transparent, black 99.9%);  */
   -webkit-mask-image: linear-gradient(
@@ -129,7 +128,7 @@ header {
   text-align: center;
   position: fixed;
   top: 10px;
-  height: 50%;
+  white-space: nowrap;
 
   z-index: 10;
 }
