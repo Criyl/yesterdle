@@ -3,45 +3,30 @@ package codes.carroll.scrape;
 import com.renomad.minum.web.FullSystem;
 import com.renomad.minum.database.Db;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import codes.carroll.WordModel;
 
-import org.openqa.selenium.chrome.ChromeOptions;
-
 import java.net.URL;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+import java.nio.charset.Charset;
+
 import java.util.List;
 import java.lang.Thread;
 import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.lang.InterruptedException;
 
 public class Main {
-
-    private static void start(WebDriver driver) throws InterruptedException {
-        Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(2));
-        wait.until(d -> driver.findElement(By.tagName("body")).isEnabled());
-
-        WebElement playButton = driver.findElement(By.xpath("//button[@data-testid='Play']"));
-        playButton.click();
-
-        wait.until(d -> driver.findElement(By.xpath("//button[@aria-label='Close']")).isEnabled());
-        WebElement closeButton = driver.findElement(By.xpath("//button[@aria-label='Close']"));
-        closeButton.sendKeys(Keys.RETURN);
-    }
-
-    private static void enterGuess(WebDriver driver, String guess) throws InterruptedException {
-
-        WebElement body = driver.findElement(By.tagName("body"));
-        body.sendKeys(guess.toString() + Keys.RETURN);
-        Thread.sleep(3000);
-    }
-
+    private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static void add(Db<WordModel> db, String word) {
         if (word.length() != 5) {
             return;
@@ -57,47 +42,34 @@ public class Main {
         db.write(wordModel);
     }
 
-    private static String solve(WebDriver driver) throws InterruptedException {
-        return solve(driver, "scram");
+    private static String readAll(Reader rd) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        int cp;
+        while ((cp = rd.read()) != -1) {
+          sb.append((char) cp);
+        }
+        return sb.toString();
+    }
+    
+    public static String findWord() throws IOException, JSONException {
+        InputStream is = new URL("https://www.nytimes.com/svc/wordle/v2/"+dtf.format(ZonedDateTime.now(ZoneId.of("UTC")))+".json").openStream();
+
+        try {
+          BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+          String jsonText = readAll(rd);
+          JSONObject json = new JSONObject(jsonText);
+          return json.getString("solution").toUpperCase();
+        } finally {
+          is.close();
+        }
     }
 
-    private static String solve(WebDriver driver, String testWord) throws InterruptedException {
-        start(driver);
-        Thread.sleep(3000);
-        enterGuess(driver, testWord);
-        enterGuess(driver, testWord);
-        enterGuess(driver, testWord);
-        enterGuess(driver, testWord);
-        enterGuess(driver, testWord);
-        enterGuess(driver, testWord);
-
-        Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(2));
-        wait.until(d -> driver.findElement(By.xpath("//div[@aria-live='polite']")).isEnabled());
-        String results = driver.findElement(By.xpath("//div[@aria-live='polite']")).getText();
-        return results;
-    }
-
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException, JSONException {
         FullSystem fs = FullSystem.initialize();
         Db<WordModel> wordDB = fs.getContext().getDb("words", WordModel.EMPTY);
-
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments(List.of(
-                "--ignore-ssl-errors=yes",
-                "--ignore-certificate-errors"));
-        String seleniumUri = System.getenv("SELENIUM_URI");
-        WebDriver driver = new RemoteWebDriver(new URL(seleniumUri), options);
-
-        String oldWord = wordDB.values()
-                .stream()
-                .toList()
-                .get(wordDB.values().size() - 3).word;
-
-        driver.get("https://www.nytimes.com/games/wordle");
-        String result = solve(driver, oldWord);
-        add(wordDB, result);
-        System.out.println(result);
-        driver.quit();
+        String word = findWord();
+        System.out.println(word);
+        add(wordDB, word);
     }
 
 }
