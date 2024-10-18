@@ -1,0 +1,32 @@
+name: Semantic Release
+on:
+  push:
+    branches:
+    - masters
+jobs:
+  build-upload-release:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Maven Action
+      uses: s4u/setup-maven-action@v1.7.0
+      with:
+        java-version: 21
+        maven-version: 3.9.6
+    - name: Setup Node.js and semantic-release plugins
+      uses: actions/setup-node@v1
+      with:
+        node-version: 22
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }} 
+    - name: Install Release Dependancies
+      run: npm install -g semantic-release @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/exec semantic-release/git semantic-release/release-notes-generator
+    - name: Install Task
+      uses: arduino/setup-task@v2
+    - name: Install yq
+      run: wget https://github.com/mikefarah/yq/releases/download/v4.9.6/yq_linux_386 -O /usr/bin/yq
+    - name: Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+      run: npx semantic-release

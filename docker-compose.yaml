@@ -2,13 +2,7 @@ version: "3.8"
 services:
   webapp:
     build: ./yesterdle_minum
-    command:
-      [
-        "java",
-        "-jar",
-        "./target/minum_server-1.0.0-jar-with-dependencies.jar",
-        "codes.carroll.Main",
-      ]
+    command: ["codes.carroll.Main"]
     ports:
       - 8080:8080
     tty: true
@@ -18,15 +12,7 @@ services:
         target: /opt/project/out
   scrape:
     build: ./yesterdle_minum
-    command:
-      [
-        "java",
-        "-cp",
-        "target/minum_server-1.0.0-jar-with-dependencies.jar",
-        "codes.carroll.scrape.Main",
-      ]
-    ports:
-      - 8000:8080
+    command: ["codes.carroll.scrape.Main"]
     tty: true
     volumes:
       - type: bind

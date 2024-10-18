@@ -5,10 +5,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>codes.carroll</groupId>
-  <artifactId>minum_server</artifactId>
+  <artifactId>yesterdle</artifactId>
   <version>1.0.0</version>
 
-  <name>minum_server</name>
+  <name>yesterdle</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -129,5 +129,6 @@
         </configuration>
       </plugin>
     </plugins>
+    <finalName>yesterdle</finalName>
   </build>
 </project>

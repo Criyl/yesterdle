@@ -1,0 +1,38 @@
+version: '3'
+env:
+  VERSION: 1.0.1
+tasks:
+  default:
+    cmds:
+      - task -a
+    silent: true
+
+  test-mvn:
+    dir: yesterdle_minum
+    cmds:
+      - mvn test
+  test:
+    desc: Execute unit tests.
+    deps:
+      - test-mvn
+
+  release-mvn:
+    dir: yesterdle_minum
+    cmds:
+      - mvn versions:set -DnewVersion={{.VERSION}}
+      - mvn package 
+      - mkdir -p ../release 
+      - mv target/*.jar ../release
+  release-helm:
+    cmds:
+      - helm package --app-version {{.VERSION}} charts/yesterdle
+      - mkdir -p release 
+      - mv *.tgz release
+      - yq e '.appVersion |= "{{.VERSION}}"' -i charts/yesterdle/Chart.yaml
+      - yq e '.server.image |= "criyl/yesterdle:{{.VERSION}}"' -i charts/yesterdle/values.yaml
+
+  release:
+    desc: Handle release version
+    deps:
+      - release-helm
+      - release-mvn
