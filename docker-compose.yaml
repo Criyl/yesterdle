@@ -16,7 +16,6 @@ services:
       - type: bind
         source: mnt/
         target: /opt/project/out
-
   scrape:
     build: ./yesterdle_minum
     command:
@@ -26,10 +25,6 @@ services:
         "target/minum_server-1.0.0-jar-with-dependencies.jar",
         "codes.carroll.scrape.Main",
       ]
-    depends_on:
-      - selenium
-    environment:
-      - SELENIUM_URI=http://selenium:4444/wd/hub
     ports:
       - 8000:8080
     tty: true
@@ -37,14 +32,5 @@ services:
       - type: bind
         source: mnt/
         target: /opt/project/out
-
-  selenium:
-    image: selenium/standalone-chrome
-    shm_size: 2g
-    environment:
-      SE_VNC_NO_PASSWORD: 1
-    ports:
-      - 4444:4444
-
 volumes:
   default:
