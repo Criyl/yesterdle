@@ -10,11 +10,11 @@ spec:
     port: {{ .Values.server.service.port }}
     protocol: TCP
     targetPort: 8080
-    {{- if .Values.server.service.nodePort}}
-    nodePort: {{ toYaml .Values.server.service.nodePort | nindent 12 }}
-    {{- end }}
-    clusterIP: {{ .Values.server.service.clusterIP }}
-    loadBalancerIP: {{ .Values.server.service.loadBalancerIP }}
+  {{- if .Values.server.service.nodePort}}
+  nodePort: {{ .Values.server.service.nodePort }}
+  {{- end }}
+  clusterIP: {{ .Values.server.service.clusterIP }}
+  loadBalancerIP: {{ .Values.server.service.loadBalancerIP }}
   selector:
     app: yesterdle-server
   type: {{ .Values.server.service.type }}

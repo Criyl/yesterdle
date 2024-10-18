@@ -23,11 +23,8 @@ spec:
           containers:
           - name: yesterdle-scraper
             image: {{ .Values.server.image }}
-            command:
-              - bash
-              - -c
             args:
-              - java -cp target/minum_server-1.0.0-jar-with-dependencies.jar codes.carroll.scrape.Main
+              - codes.carroll.scrape.Main
             volumeMounts:
               - mountPath: "/opt/project/out"
                 name: server-data
