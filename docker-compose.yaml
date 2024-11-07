@@ -10,13 +10,5 @@ services:
       - type: bind
         source: mnt/
         target: /opt/project/out
-  scrape:
-    build: ./yesterdle_minum
-    command: ["codes.carroll.scrape.Main"]
-    tty: true
-    volumes:
-      - type: bind
-        source: mnt/
-        target: /opt/project/out
 volumes:
   default:

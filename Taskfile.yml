@@ -9,6 +9,8 @@ tasks:
 
   test-mvn:
     dir: yesterdle_minum
+    sources:
+    - '**/*.java'
     cmds:
       - mvn test
   test:
