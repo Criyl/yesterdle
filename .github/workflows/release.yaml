@@ -2,7 +2,7 @@ name: Semantic Release
 on:
   push:
     branches:
-    - masters
+      - master
 jobs:
   build-upload-release:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
@@ -20,13 +20,24 @@ jobs:
         node-version: 22
       env:
         GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }} 
-    - name: Install Release Dependancies
-      run: npm install -g semantic-release @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/exec semantic-release/git semantic-release/release-notes-generator
     - name: Install Task
       uses: arduino/setup-task@v2
-    - name: Install yq
-      run: wget https://github.com/mikefarah/yq/releases/download/v4.9.6/yq_linux_386 -O /usr/bin/yq
-    - name: Release
+    - name: 'Setup yq'
+      uses: dcarbone/install-yq-action@v1.1.1
+      with:
+        version: 'v4.9.6'
+        download-compressed: 'true'
+        force: 'false'
+    - name: Semantic Release
+      uses: cycjimmy/semantic-release-action@v4
+      with:
+        extra_plugins: |
+          @semantic-release/changelog
+          @semantic-release/commit-analyzer
+          @semantic-release/release-notes-generator
+          @semantic-release/exec
+          @semantic-release/git
+          @semantic-release/github
+          @semantic-release/commit-analyzer
       env:
-        GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-      run: npx semantic-release
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
