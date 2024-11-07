@@ -27,12 +27,12 @@ tasks:
       - mv target/*.jar ../release
   release-helm:
     cmds:
-      - helm package --app-version {{.VERSION}} charts/yesterdle
       - mkdir -p release 
-      - mv *.tgz release
       - yq e '.version |= "{{.VERSION}}"' -i charts/yesterdle/Chart.yaml
       - yq e '.appVersion |= "{{.VERSION}}"' -i charts/yesterdle/Chart.yaml
       - yq e '.server.image |= "criyl/yesterdle:{{.VERSION}}"' -i charts/yesterdle/values.yaml
+      - helm package --app-version {{.VERSION}} charts/yesterdle
+      - mv *.tgz release
 
   release:
     desc: Handle release version
