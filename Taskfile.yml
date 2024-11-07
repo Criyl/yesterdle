@@ -1,6 +1,6 @@
 version: '3'
 env:
-  VERSION: 1.0.1
+  VERSION: 1.0.0
 tasks:
   default:
     cmds:
@@ -30,6 +30,7 @@ tasks:
       - helm package --app-version {{.VERSION}} charts/yesterdle
       - mkdir -p release 
       - mv *.tgz release
+      - yq e '.version |= "{{.VERSION}}"' -i charts/yesterdle/Chart.yaml
       - yq e '.appVersion |= "{{.VERSION}}"' -i charts/yesterdle/Chart.yaml
       - yq e '.server.image |= "criyl/yesterdle:{{.VERSION}}"' -i charts/yesterdle/values.yaml
 
@@ -38,3 +39,5 @@ tasks:
     deps:
       - release-helm
       - release-mvn
+    cmds:
+      - yq e '.env.VERSION |= "{{.VERSION}}"' -i Taskfile.yaml
