@@ -1,6 +1,6 @@
 schedule: "30 0 * * *"
 server:
-  image: criyl/yesterdle:latest
+  image: criyl/yesterdle:1.0.0
   replicas: 1
   persistence:
     existingClaim: ""

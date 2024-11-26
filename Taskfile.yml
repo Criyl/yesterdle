@@ -37,7 +37,7 @@ tasks:
   release:
     desc: Handle release version
     deps:
-      - release-helm
       - release-mvn
+      - release-helm
     cmds:
       - yq e '.env.VERSION |= "{{.VERSION}}"' -i Taskfile.yaml

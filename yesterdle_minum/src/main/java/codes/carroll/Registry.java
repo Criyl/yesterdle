@@ -1,12 +1,14 @@
 package codes.carroll;
 
 import com.renomad.minum.web.RequestLine;
-import com.renomad.minum.Context;
+import com.renomad.minum.state.Context;
 import com.renomad.minum.database.Db;
 import com.renomad.minum.templating.TemplateProcessor;
-import com.renomad.minum.web.Request;
+import com.renomad.minum.web.IRequest;
+import com.renomad.minum.web.IResponse;
 import com.renomad.minum.web.Response;
 import com.renomad.minum.web.WebFramework;
+import com.renomad.minum.utils.FileUtils;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,18 +27,11 @@ public class Registry {
         private final TemplateProcessor historyTemplateProcessor;
 
         public Registry(Context context) {
-                String base_template = context
-                                .getFileUtils()
-                                .readTextFile("src/main/webapp/templates/base.html");
-                String today_template = context
-                                .getFileUtils()
-                                .readTextFile("src/main/webapp/templates/today.html");
-                String yesterday_template = context
-                                .getFileUtils()
-                                .readTextFile("src/main/webapp/templates/yesterday.html");
-                String history_template = context
-                                .getFileUtils()
-                                .readTextFile("src/main/webapp/templates/history.html");
+                FileUtils fileUtils = new FileUtils(context.getLogger(), context.getConstants());
+                String base_template = fileUtils.readTextFile("src/main/webapp/templates/base.html");
+                String today_template = fileUtils.readTextFile("src/main/webapp/templates/today.html");
+                String yesterday_template = fileUtils.readTextFile("src/main/webapp/templates/yesterday.html");
+                String history_template = fileUtils.readTextFile("src/main/webapp/templates/history.html");
 
                 TemplateProcessor baseTemplateProcessor = TemplateProcessor.buildProcessor(base_template);
 
@@ -63,7 +58,7 @@ public class Registry {
                 webFramework.registerPath(RequestLine.Method.GET, "history", this::history);
         }
 
-        public Response history(Request r) {
+        public IResponse history(IRequest r) {
                 Db<WordModel> words = context.getDb("words", WordModel.EMPTY);
                 Collection<WordModel> wordModelStream = words.values();
 
@@ -89,7 +84,7 @@ public class Registry {
                 return Response.htmlOk(historyTemplateProcessor.renderTemplate(templateValues));
         }
 
-        public Response today(Request r) {
+        public IResponse today(IRequest r) {
                 String wordText = "No Data";
                 ZonedDateTime wordDateTime = ZonedDateTime.now();
 
@@ -109,7 +104,7 @@ public class Registry {
                 return Response.htmlOk(todayTemplateProcessor.renderTemplate(templateValues));
         }
 
-        public Response yesterday(Request r) {
+        public IResponse yesterday(IRequest r) {
                 String wordText = "No Data";
                 ZonedDateTime wordDateTime = ZonedDateTime.now();
 
