@@ -1,7 +1,7 @@
 package codes.carroll;
 
 import com.renomad.minum.web.FullSystem;
-import com.renomad.minum.Context;
+import com.renomad.minum.state.Context;
 
 import codes.carroll.scrape.Scraper;
 

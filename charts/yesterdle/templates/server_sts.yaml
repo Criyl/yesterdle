@@ -13,11 +13,16 @@ spec:
   {{- if .Values.server.service.nodePort}}
   nodePort: {{ .Values.server.service.nodePort }}
   {{- end }}
-  clusterIP: {{ .Values.server.service.clusterIP }}
+  {{- if .Values.server.service.loadBalancerIP}}
   loadBalancerIP: {{ .Values.server.service.loadBalancerIP }}
+  {{- end }}
+  {{- if .Values.server.service.clusterIP}}
+  clusterIP: {{ .Values.server.service.clusterIP }}
+  {{- end }}
   selector:
     app: yesterdle-server
   type: {{ .Values.server.service.type }}
+
 ---
 apiVersion: apps/v1
 kind: StatefulSet
