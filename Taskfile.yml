@@ -40,4 +40,4 @@ tasks:
       - release-mvn
       - release-helm
     cmds:
-      - yq e '.env.VERSION |= "{{.VERSION}}"' -i Taskfile.yaml
+      - yq e '.env.VERSION |= "{{.VERSION}}"' -i Taskfile.yml
