@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.1](https://github.com/Criyl/yesterdle/compare/v1.0.0...v1.0.1) (2024-12-02)
+
+
+### Bug Fixes
+
+* update minum version ([95cca81](https://github.com/Criyl/yesterdle/commit/95cca8114d9e3c1f1e38d27fe3147bb6f92117d9))
+
 # 1.0.0 (2024-11-07)
 
 
